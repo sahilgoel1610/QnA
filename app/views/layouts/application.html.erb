@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QnaApp</title>
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= csrf_meta_tags %>
+</head>
+
+<body>
+
+	<div class="container">
+
+		<nav class="navbar navbar-inverse">
+		  <div class="container-fluid">
+		    <div class="navbar-header">
+		      <a class="navbar-brand" href="#">QNA Website</a>
+		    </div>
+		    <div style="float: right;">
+				<ul class="nav navbar-nav">
+		        <li >
+		        	
+		        	<% if user_signed_in?%>
+					<a>	Welcome! <%=current_user.email%><%= link_to 'Logout', destroy_user_session_path, :method => :delete %></a>
+					<%else %>
+						<a>
+						<%= link_to 'Login', new_user_session_path%> 
+						</a>
+					<%end%>
+				</li>
+		      </ul>
+		    </div>
+		  </div>
+		</nav>
+
+	
+	 
+
+<%= yield %>
+
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<html>
+<head>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+
+<script>
+
+function answerPost(qid){
+	var x = document.getElementById("answer"+qid).value;
+    var y = document.getElementById("Ans_"+qid);
+    if(x!="")
+    {
+    y.insertAdjacentHTML('beforeend', '<div class="well well-sm">'+x+'</div><br>');
+    k=document.getElementById("answerform"+qid);
+    // k.submit(); 
+    // k.reset();
+
+    }
+}
+
+window.setInterval(function(){
+  var xmlhttp;
+  xmlhttp=new XMLHttpRequest();
+
+  xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    	var k=xmlhttp.responseText;
+    	jo=JSON.parse(k);
+    	console.log(JSON.parse(k));
+    	var row= document.getElementById("dt");
+    	for(i=0;i<Object.keys(jo['up_likes']).length;++i)
+    	{	
+    		
+    		row.insertAdjacentHTML('afterbegin', '<tr> </br> Question '+jo['up_likes'][i]['id']+' liked by  '+jo['up_likes'][0]['emailId']+'</br></tr>');
+    	}
+
+    	for(i=0;i<Object.keys(jo['up_quests']).length;++i)
+    	{	
+    		
+    		row.insertAdjacentHTML('afterbegin', '<tr> </br> Question '+jo['up_quests'][i]['id']+' posted by  '+jo['up_quests'][i]['user']+'</br></tr>');
+    	}
+    	
+    }
+  }
+	
+xmlhttp.open("GET","updates",true);
+xmlhttp.send();
+
+
+  /// call your function here
+}, 10000);
+
+
+
+function increaseLike(qid){
+		
+	<% if user_signed_in? %>
+		
+		var x=++document.getElementById("like_"+qid).value;	
+		//document.getElementById("like_"+qid).disabled = true;
+	<%else %>
+		alert("please login to like a page");
+	<%end%>	
+}	
+
+</script>
+
+
+
+<body>
+
+<div class="new_question">
+<form action="/post_q">
+<button type="submit" class="btn btn-primary btn-lg btn-block">Post a new Question here!!!</button>
+</form>
+</br>
+</br>
+
+
+</div>		
+		
+  <%if !user_signed_in?%>
+  <div class="alert alert-warning" > You cant post a reply without being logged in </div>
+  <%end%>
+	<div class="col-sm-8">
+		
+		<% @questions.each do |q| %>
+			
+			
+				<div class="panel panel-default">
+				<div class="panel-body" style="font-size: 200%">
+					<div><%= q.quest_txt%></div>
+					<% if user_signed_in? %>
+					<%	po_emaild=current_user.email %>
+					<%else %>
+					<% po_emaild="" %>
+					<% end%>
+
+					<%= button_to "#{q.liked}",{:action =>"incr_like",  qid: q.id , eid: po_emaild}, :method => "post", :remote => true , :onclick =>"increaseLike(#{q.id});", :id => "like_"+"#{q.id}" , :class => "btn btn-info", :style =>"float: left"  %>
+
+					<div style= "float:left; font-size:60%; padding-left:10px; color: silver;"><%= q.desc %></div>
+					<div style= "float:right; font-size:60%; padding-left:10px; color: silver;"><%=q.user%></div>
+					
+				</div>
+				</div>
+			<% @ans=q.answers.first(3) %>
+				
+
+				<% @ans.each do |an| %>
+				<div>
+					<div class="well well-sm"><%= an.ans_txt%> </div><br>
+				</div>
+				<%end %>
+					<div id="Ans_<%=q.id%>" class="form-group"></div><br>
+					<% if user_signed_in? %>
+						<%= form_tag ("/save_answer"), :remote => true, :id => "answerform#{q.id}" do%>
+							<%= text_field_tag "answer#{q.id}" , "", class: "form-control", :required => true %> </br>
+							<%= submit_tag ("Reply"), :onclick => "return answerPost(#{q.id});", :class =>"btn btn-primary"%>
+							<%= text_field_tag 'qid' , q.id , type: "hidden" %> 
+							</br>
+							</br>
+					<% end %>
+			<%end%>
+			<hr>
+			<hr>
+		<%end%>
+
+
+	</div>
+	<div class="col-sm-4">
+		<table style="height: 10px; width: 300px;" class="table">
+			<thead >
+		<tr >
+			<th>Recent updates</th>
+		</tr>
+	</thead>
+	<tbody id="dt" style="height: 600px; overflow: auto;">
+	</tbody>
+
+		</table>
+	</div>
+
+</div>
+<div id="myDiv"> </div>
+</body>
+</html>
+
