@@ -35,7 +35,7 @@
 			<%= f.text_field :user, :value =>current_user.email, :style => "width: 35%", :type => "hidden" %> </br>
 		</div>
 		<%else%>
-			Please Login to Post a question
+			Please <%= link_to 'Login', new_user_session_path%>  to Post a question
 		<%end%>
 		<%end%>
 		</p>

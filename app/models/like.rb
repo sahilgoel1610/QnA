@@ -8,6 +8,11 @@ def update (qid)
 		qu=Question.find(qid)
 		qu[:liked]+=1
 		qu.save
+ 		
+ 		js_stri="document.getElementById('like_'+#{qid}).value += ' upvoted'; 
+					document.getElementById('like_'+#{qid}).disabled = true; "
+
+		return js_stri
 end
 
 

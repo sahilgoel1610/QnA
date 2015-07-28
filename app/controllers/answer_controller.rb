@@ -5,7 +5,7 @@ class AnswerController < ApplicationController
 		record={"ans_txt" => params[ans_txt_id], "question_id" => params[:qid]}
 		@ans=Answer.create(record)
 		@ans.save
-		#redirect_to '/list'
+		render js: "k.reset();"
 		
 	end
 end

@@ -14,11 +14,9 @@ function answerPost(qid){
     var y = document.getElementById("Ans_"+qid);
     if(x!="")
     {
-    y.insertAdjacentHTML('beforeend', '<div class="well well-sm">'+x+'</div><br>');
+    y.insertAdjacentHTML('beforeend', '<div class="well well-sm">'+x+'</div>');
     k=document.getElementById("answerform"+qid);
-    // k.submit(); 
-    // k.reset();
-
+    
     }
 }
 
@@ -71,53 +69,55 @@ function increaseLike(qid){
 
 </script>
 
-
-
 <body>
 
 <div class="new_question">
-<form action="/post_q">
-<button type="submit" class="btn btn-primary btn-lg btn-block">Post a new Question here!!!</button>
-</form>
-</br>
-</br>
-
-
+		<form action="/post_q">
+		<button type="submit" class="btn btn-primary btn-lg btn-block">Post a new Question here!!!</button>
+		</form>
+	</br>
+	</br>
 </div>		
 		
-  <%if !user_signed_in?%>
-  <div class="alert alert-warning" > You cant post a reply without being logged in </div>
-  <%end%>
-	<div class="col-sm-8">
+ <%if !user_signed_in?%>
+ <div class="alert alert-warning" > You cant post a reply without being logged in </div>
+ <%end%>
+	
+
+<div class="col-sm-8">
 		
 		<% @questions.each do |q| %>
-			
-			
-				<div class="panel panel-default">
+			<div class="panel panel-default">
 				<div class="panel-body" style="font-size: 200%">
-					<div><%= q.quest_txt%></div>
-					<% if user_signed_in? %>
-					<%	po_emaild=current_user.email %>
-					<%else %>
-					<% po_emaild="" %>
-					<% end%>
+	               <div><%= q.quest_txt%></div>
 
-					<%= button_to "#{q.liked}",{:action =>"incr_like",  qid: q.id , eid: po_emaild}, :method => "post", :remote => true , :onclick =>"increaseLike(#{q.id});", :id => "like_"+"#{q.id}" , :class => "btn btn-info", :style =>"float: left"  %>
+					<% if user_signed_in? %>
+					 	<% if !q.likes.find_by emailId: current_user.email %>
+							
+							<%= button_to "#{q.liked}",{:action =>"incr_like",  qid: q.id , eid: current_user.email}, :method => "post", :remote => true , :onclick =>"increaseLike(#{q.id});", :id => "like_"+"#{q.id}" , :class => "btn btn-info", :style =>"float: left"  %>
+						
+						<%else%>
+							
+							<%= button_to "#{q.liked} Upvotes", nil, :class => "btn btn-primary disabled", :style =>"float: left" , :disabled => true%>
+						<%end%>
+					
+					<% else %>
+						<%= button_to "#{q.liked}", nil, :class => "btn btn-primary disabled", :style =>"float: left"  , :disabled => true %>
+					<%end%>
 
 					<div style= "float:left; font-size:60%; padding-left:10px; color: silver;"><%= q.desc %></div>
 					<div style= "float:right; font-size:60%; padding-left:10px; color: silver;"><%=q.user%></div>
 					
 				</div>
-				</div>
-			<% @ans=q.answers.first(3) %>
-				
+			</div>
+			
 
+			<% @ans=q.answers.first(3) %>
 				<% @ans.each do |an| %>
-				<div>
-					<div class="well well-sm"><%= an.ans_txt%> </div><br>
-				</div>
+					<div class="well well-sm"><%= an.ans_txt%> </div>
 				<%end %>
-					<div id="Ans_<%=q.id%>" class="form-group"></div><br>
+
+				<div id="Ans_<%=q.id%>" class="form-group"></div>
 					<% if user_signed_in? %>
 						<%= form_tag ("/save_answer"), :remote => true, :id => "answerform#{q.id}" do%>
 							<%= text_field_tag "answer#{q.id}" , "", class: "form-control", :required => true %> </br>
@@ -125,29 +125,26 @@ function increaseLike(qid){
 							<%= text_field_tag 'qid' , q.id , type: "hidden" %> 
 							</br>
 							</br>
-					<% end %>
+						<% end %>
+					<%end%>
+					<hr><hr>
 			<%end%>
-			<hr>
-			<hr>
-		<%end%>
 
-
-	</div>
+</div>
+	
 	<div class="col-sm-4">
 		<table style="height: 10px; width: 300px;" class="table">
 			<thead >
-		<tr >
-			<th>Recent updates</th>
-		</tr>
-	</thead>
-	<tbody id="dt" style="height: 600px; overflow: auto;">
-	</tbody>
-
+				<tr>
+					<th>Recent updates</th>
+				</tr>
+			</thead>
+	
+	<tbody id="dt" style="height: 600px; overflow: auto;"></tbody>
 		</table>
 	</div>
 
 </div>
-<div id="myDiv"> </div>
 </body>
 </html>
 
