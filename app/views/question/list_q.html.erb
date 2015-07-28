@@ -7,14 +7,16 @@
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 
-<script>
+<script >
 
-function answerPost(qid){
+function answerPost(qid  , userEmail){
+	//console.log(userEmail);
 	var x = document.getElementById("answer"+qid).value;
     var y = document.getElementById("Ans_"+qid);
     if(x!="")
     {
-    y.insertAdjacentHTML('beforeend', '<div class="well well-sm">'+x+'</div>');
+
+    y.insertAdjacentHTML('beforeend', '<div class="well well-sm">'+x+'<div style= "float:right; font-size:80%; color: silver;">'+userEmail+'</div></div>');
     k=document.getElementById("answerform"+qid);
     
     }
@@ -88,6 +90,7 @@ function increaseLike(qid){
 		
 		<% @questions.each do |q| %>
 			<div class="panel panel-default">
+				
 				<div class="panel-body" style="font-size: 200%">
 	               <div><%= q.quest_txt%></div>
 
@@ -112,17 +115,21 @@ function increaseLike(qid){
 			</div>
 			
 
-			<% @ans=q.answers.first(3) %>
+			<% @ans=q.answers.all %>
 				<% @ans.each do |an| %>
-					<div class="well well-sm"><%= an.ans_txt%> </div>
+
+					<div class="well well-sm"><%= an.ans_txt%> 
+						<div style= "float:right; font-size:80%; color: silver;"><%=an.user%></div>
+					</div>
 				<%end %>
 
 				<div id="Ans_<%=q.id%>" class="form-group"></div>
 					<% if user_signed_in? %>
 						<%= form_tag ("/save_answer"), :remote => true, :id => "answerform#{q.id}" do%>
 							<%= text_field_tag "answer#{q.id}" , "", class: "form-control", :required => true %> </br>
-							<%= submit_tag ("Reply"), :onclick => "return answerPost(#{q.id});", :class =>"btn btn-primary"%>
-							<%= text_field_tag 'qid' , q.id , type: "hidden" %> 
+							<%= submit_tag ("Reply"), :onclick => "return answerPost(#{q.id}, '#{current_user.email}');", :class =>"btn btn-primary"%>
+							<%= text_field_tag 'qid' , q.id , type: "hidden" %>
+							<%= text_field_tag 'userid' , current_user.email , type: "hidden" %> 
 							</br>
 							</br>
 						<% end %>
