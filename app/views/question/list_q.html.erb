@@ -41,7 +41,7 @@ window.setInterval(function(){
     	for(i=0;i<Object.keys(jo['up_likes']).length;++i)
     	{	
     		
-    		row.insertAdjacentHTML('afterbegin', '<tr> </br> Question '+jo['up_likes'][i]['id']+' liked by  '+jo['up_likes'][0]['emailId']+'</br></tr>');
+    		row.insertAdjacentHTML('afterbegin', '<tr> </br> Question '+jo['up_likes'][i]['question_id']+' liked by  '+jo['up_likes'][0]['emailId']+'</br></tr>');
     	}
 
     	for(i=0;i<Object.keys(jo['up_quests']).length;++i)
@@ -149,18 +149,19 @@ function increaseLike(qid){
 							<% end %>
 						<%end%>
 						<hr><hr>
+					</div>
 				<%end%>
-			</div>
+			
 		</div>
 
 		<div class="col-sm-4">
-			<table style="" class="table">
+			<table class="table">
 				<thead >
 					<tr>
 						<th>Recent updates</th>
 					</tr>
 				</thead>
-				<tbody id="dt" style="height: 600px; overflow: auto;"></tbody>
+				<tbody id="dt" style=" overflow: auto;"></tbody>
 			</table>
 		</div>
 	</div>
