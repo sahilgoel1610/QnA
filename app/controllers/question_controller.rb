@@ -25,6 +25,16 @@ def incr_like
 	end
 end
 
+def remove
+	if Question.find_by(id: params[:id], user: params[:email]).destroy
+		
+		render js: "alert('question deleted');
+					var question_div=document.getElementById('ques_block'+#{params[:id]});
+					question_div.parentNode.removeChild(question_div);"
+	else
+		render js: "alert('Something went wrong');"
+	end
+end
 
 def reply
 	@qid=params[:qid]

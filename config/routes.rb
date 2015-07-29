@@ -8,6 +8,7 @@ QnaApp::Application.routes.draw do
   get   'post_q' => 'question#view_q'
   post 'post_q' => 'question#view_q'
   get 'updates' => 'dynamic_tab#updates'
+  post 'remove' => 'question#remove'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
