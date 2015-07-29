@@ -8,6 +8,7 @@
 </head>
 
 <body>
+	
 
 	<div class="container">
 
@@ -19,21 +20,23 @@
 		    <div style="float: right;">
 				<ul class="nav navbar-nav">
 		        <li >
-		        	
-		        	<% if user_signed_in?%>
-					<a>	Welcome! <%=current_user.email%><%= link_to 'Logout', destroy_user_session_path, :method => :delete %></a>
-					<%else %>
-						<a>
-						<%= link_to 'Login', new_user_session_path%> 
-						</a>
-					<%end%>
+		        	 <% if current_user %>
+    				<a>	Welcome! <%= current_user.email %> </a>
+    					<%= link_to "Log out", log_out_path %>
+  					<% else %>
+					    <%= link_to "Sign up", sign_up_path %> /<%= link_to "Log in", log_in_path %>
+					 <% end %>
+		        
 				</li>
 		      </ul>
 		    </div>
 		  </div>
 		</nav>
 
-	
+	<% flash.each do |name, msg| %>
+    <%= content_tag :div, msg, :id => "flash#{name}" %>
+  <% end %>
+
 	 
 
 <%= yield %>

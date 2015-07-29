@@ -64,7 +64,7 @@ xmlhttp.send();
 
 function increaseLike(qid){
 		
-	<% if user_signed_in? %>
+	<% if current_user %>
 		
 		var x=++document.getElementById("like_"+qid).value;	
 		//document.getElementById("like_"+qid).disabled = true;
@@ -85,7 +85,8 @@ function increaseLike(qid){
 		</br>
 	</div>		
 		
- <%if !user_signed_in?%>
+ <%if current_user %>
+ <%else%>
  <div class="alert alert-warning" > You cant post a reply without being logged in </div>
  <%end%>
 
@@ -95,10 +96,10 @@ function increaseLike(qid){
 			<% @questions.each do |q| %>
 			<div id=<%="ques_block#{q.id}"%> >
 				<div class="panel panel-default">
-				<% if !user_signed_in? %>
-					<% p_email="" %>
-				<%else %>
+				<% if current_user %>
 					<% p_email=current_user.email%>
+				<%else %>
+					<% p_email="" %>
 				<%end%>
 				<%= link_to_if p_email==q.user,
 				image_tag("del_but.jpeg",  width: '15', height: '15', :style => "float: right"), 
@@ -108,7 +109,7 @@ function increaseLike(qid){
 					<div class="panel-body" style="font-size: 200%">
 		               <div><%= q.quest_txt%></div>
 
-						<% if user_signed_in? %>
+						<% if current_user %>
 						 	<% if !q.likes.find_by emailId: current_user.email %>
 								
 								<%= button_to "#{q.liked}",{:action =>"incr_like",  qid: q.id , eid: current_user.email}, :method => "post", :remote => true , :onclick =>"increaseLike(#{q.id});", :id => "like_"+"#{q.id}" , :class => "btn btn-info", :style =>"float: left"  %>
@@ -138,7 +139,7 @@ function increaseLike(qid){
 					<%end %>
 
 					<div id="Ans_<%=q.id%>" class="form-group"></div>
-						<% if user_signed_in? %>
+						<% if current_user %>
 							<%= form_tag ("/save_answer"), :remote => true, :id => "answerform#{q.id}" do%>
 								<%= text_field_tag "answer#{q.id}" , "", class: "form-control", :required => true %> </br>
 								<%= submit_tag ("Reply"), :onclick => "return answerPost(#{q.id}, '#{current_user.email}');", :class =>"btn btn-primary"%>

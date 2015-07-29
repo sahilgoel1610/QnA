@@ -1,4 +1,10 @@
 QnaApp::Application.routes.draw do
+  get "sessions/new"
+  get 'sign_up' => 'uauth#new', :as => "sign_up"
+  get "log_in" => "sessions#new", :as => "log_in"
+  get "log_out" => "sessions#destroy", :as => "log_out"
+  resources :uauth
+  resources :sessions
   devise_for :users
   root to: 'question#list_q'
   post 'create_q' => 'question#create_q' 

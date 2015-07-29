@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150728065411) do
+ActiveRecord::Schema.define(version: 20150729095127) do
 
   create_table "answers", force: true do |t|
     t.datetime "created_at"
@@ -35,6 +35,14 @@ ActiveRecord::Schema.define(version: 20150728065411) do
     t.string   "user"
     t.string   "desc"
     t.integer  "liked"
+  end
+
+  create_table "uauths", force: true do |t|
+    t.string   "email"
+    t.string   "password_hash"
+    t.string   "password_salt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "user_auths", force: true do |t|
