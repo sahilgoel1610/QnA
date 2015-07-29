@@ -1,7 +1,7 @@
 class Question < ActiveRecord::Base
  validates :quest_txt, presence: true
- has_many :answers 
- has_many :likes
+ has_many :answers, dependent: :destroy
+ has_many :likes, dependent: :destroy
 
  after_initialize :init
 
